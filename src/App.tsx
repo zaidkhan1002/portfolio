@@ -29,7 +29,7 @@ const PROFILE = {
   phone: '+91-8299558862',
   resumeHref: '', // add a PDF link (Drive/Dropbox/GitHub) when ready
   links: {
-    github: 'https://github.com/Zaid-khan',
+    github: 'https://github.com/zaidkhan1002',
     linkedin: 'https://www.linkedin.com/in/zaid-khan',
   },
 }
@@ -112,6 +112,14 @@ function ThemeToggle({
 }
 
 const PROJECTS: Project[] = [
+  {
+    title: 'Personal Portfolio Website',
+    description: 'Built a responsive portfolio website using React, Vite, and Tailwind CSS to showcase projects, skills, and experience with dark/light theme support.',
+    tech: ['React', 'Vite', 'Tailwind CSS', 'TypeScript'],
+    repo: 'https://github.com/zaidkhan1002/portfolio',
+    date: "Current",
+    featured: true,
+  },
   {
     title: 'Fake News Detection System',
     description:
