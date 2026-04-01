@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode, SVGProps } from 'react'
+import { motion } from 'framer-motion'
 import {
   applyThemeClass,
   getStoredTheme,
@@ -31,6 +32,7 @@ const PROFILE = {
   links: {
     github: 'https://github.com/zaidkhan1002',
     linkedin: 'https://www.linkedin.com/in/zaid-khan',
+    instagram: 'https://instagram.com/mohdzaidkh10',
   },
 }
 
@@ -45,12 +47,7 @@ function useRevealOnScroll() {
       return
     }
 
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'))
-    if (!('IntersectionObserver' in window)) {
-      els.forEach((el) => el.classList.add('is-visible'))
-      return
-    }
-
+    const els = document.querySelectorAll<HTMLElement>('.reveal')
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -75,39 +72,47 @@ function ThemeToggle({
   onChange: (m: ThemeMode) => void
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={() => onChange(mode === 'dark' ? 'light' : 'dark')}
       className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-black/5 text-zinc-800 shadow-sm transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10"
       aria-label="Toggle light/dark theme"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
     >
       {mode === 'dark' ? (
         // Sun icon
-        <svg
+        <motion.svg
           viewBox="0 0 24 24"
           aria-hidden="true"
           className="h-4 w-4"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 0 }}
+          transition={{ duration: 0.3 }}
         >
           <circle cx="12" cy="12" r="4" />
           <path d="M12 3v2.5M12 18.5V21M4.22 4.22 5.9 5.9M18.1 18.1l1.68 1.68M3 12h2.5M18.5 12H21M4.22 19.78 5.9 18.1M18.1 5.9 19.78 4.22" />
-        </svg>
+        </motion.svg>
       ) : (
         // Moon icon
-        <svg
+        <motion.svg
           viewBox="0 0 24 24"
           aria-hidden="true"
           className="h-4 w-4"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 0 }}
+          transition={{ duration: 0.3 }}
         >
           <path d="M20.5 14.5A7.5 7.5 0 0 1 10 4a6.5 6.5 0 1 0 10.5 10.5Z" />
-        </svg>
+        </motion.svg>
       )}
-    </button>
+    </motion.button>
   )
 }
 
@@ -219,7 +224,14 @@ function Section({
   children: ReactNode
 }) {
   return (
-    <section id={id} className="reveal scroll-mt-24 py-12 sm:py-16">
+    <motion.section
+      id={id}
+      className="reveal scroll-mt-24 py-12 sm:py-16"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }}
+    >
       <div className="mb-7 flex items-end justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
@@ -231,15 +243,19 @@ function Section({
         </div>
       </div>
       {children}
-    </section>
+    </motion.section>
   )
 }
 
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200">
+    <motion.span
+      className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200"
+      whileHover={{ scale: 1.05 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    >
       {children}
-    </span>
+    </motion.span>
   )
 }
 
@@ -255,6 +271,14 @@ function IconLinkedIn(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
       <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.86-3.04-1.86 0-2.15 1.45-2.15 2.95v5.66H9.34V9h3.41v1.56h.05c.47-.9 1.62-1.86 3.34-1.86 3.57 0 4.23 2.35 4.23 5.41v6.34ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z" />
+    </svg>
+  )
+}
+
+function IconInstagram(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
     </svg>
   )
 }
@@ -285,15 +309,18 @@ function PillLink({
   icon?: ReactNode
 }) {
   return (
-    <a
+    <motion.a
       className="inline-flex items-center gap-2 rounded-xl border border-black/10 bg-black/5 px-3 py-2 text-sm text-zinc-900 transition hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10"
       href={href}
       target={href.startsWith('http') ? '_blank' : undefined}
       rel={href.startsWith('http') ? 'noreferrer' : undefined}
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
     >
       {icon ? <span className="text-zinc-600 dark:text-zinc-300">{icon}</span> : null}
       <span>{label}</span>
-    </a>
+    </motion.a>
   )
 }
 
@@ -305,12 +332,16 @@ function Monogram() {
     .map((w) => w[0]!.toUpperCase())
     .join('')
   return (
-    <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
+    <motion.div
+      className="relative h-12 w-12 overflow-hidden rounded-2xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+      whileHover={{ scale: 1.05 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/35 via-fuchsia-500/15 to-transparent" />
       <div className="relative grid h-full w-full place-items-center text-sm font-semibold tracking-tight">
         {initials}
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -371,7 +402,12 @@ export default function App() {
   }, [menuOpen])
 
   return (
-    <div className="min-h-dvh bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <motion.div
+      className="min-h-dvh bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-grid opacity-[0.08] dark:opacity-[0.08]" />
         <div className="absolute inset-0 bg-noise opacity-[0.10] mix-blend-overlay dark:opacity-[0.12]" />
@@ -445,12 +481,19 @@ export default function App() {
 
       <main id="top">
         {menuOpen ? (
-          <div className="sm:hidden">
+          <motion.div
+            className="sm:hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
             <div
               className="fixed inset-0 z-40 bg-black/50"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="fixed inset-x-0 top-16 z-50 border-b border-black/10 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-zinc-950/95">
+            <div
+              className="fixed inset-x-0 top-16 z-50 border-b border-black/10 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-zinc-950/95"
+            >
               <Container>
                 <div className="py-4">
                   <div className="grid gap-2">
@@ -483,6 +526,11 @@ export default function App() {
                         label="LinkedIn"
                         icon={<IconLinkedIn className="h-4 w-4" />}
                       />
+                      <PillLink
+                        href={PROFILE.links.instagram}
+                        label="Instagram"
+                        icon={<IconInstagram className="h-4 w-4" />}
+                      />
                       {PROFILE.resumeHref ? (
                         <a
                           className="rounded-xl bg-indigo-500 px-4 py-3 text-center text-sm font-medium text-white hover:bg-indigo-400"
@@ -498,23 +546,48 @@ export default function App() {
                 </div>
               </Container>
             </div>
-          </div>
+          </motion.div>
         ) : null}
 
-        <section className="relative overflow-hidden py-14 sm:py-20">
+        <motion.section
+          className="relative overflow-hidden py-14 sm:py-20"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <Container>
             <div className="grid items-center gap-10 sm:grid-cols-2">
-              <div className="reveal">
+              <motion.div
+                className="reveal"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
                 <p className="text-sm text-zinc-600 dark:text-zinc-300">
                   {PROFILE.location} • {PROFILE.role}
                 </p>
-                <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                <motion.h1
+                  className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
                   Full‑stack developer building scalable products with premium UX.
-                </h1>
-                <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-700 dark:text-zinc-200">
+                </motion.h1>
+                <motion.p
+                  className="mt-4 max-w-xl text-base leading-relaxed text-zinc-700 dark:text-zinc-200"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
                   {PROFILE.bio}
-                </p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+                </motion.p>
+                <motion.div
+                  className="mt-6 flex flex-wrap items-center gap-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
                   <a
                     className="group inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-400"
                     href="#projects"
@@ -540,30 +613,53 @@ export default function App() {
                     label="LinkedIn"
                     icon={<IconLinkedIn className="h-4 w-4" />}
                   />
-                </div>
-              </div>
+                  <PillLink
+                    href={PROFILE.links.instagram}
+                    label="Instagram"
+                    icon={<IconInstagram className="h-4 w-4" />}
+                  />
+                </motion.div>
+              </motion.div>
 
-              <div className="reveal relative rounded-3xl border border-black/10 bg-white/70 p-6 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
+              <motion.div
+                className="reveal relative rounded-3xl border border-black/10 bg-white/70 p-6 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                whileHover={{ y: -5 }}
+              >
                 <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-transparent to-fuchsia-500/10" />
                 <div className="relative">
                   <p className="text-sm text-zinc-300">Quick snapshot</p>
                   <div className="mt-4 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40">
+                    <motion.div
+                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <p className="text-xs text-zinc-400">Focus</p>
                       <p className="mt-1 text-sm">MERN + ML/NLP</p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40">
+                    </motion.div>
+                    <motion.div
+                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <p className="text-xs text-zinc-400">Strength</p>
                       <p className="mt-1 text-sm">APIs + UI</p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40">
+                    </motion.div>
+                    <motion.div
+                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <p className="text-xs text-zinc-400">Stack</p>
                       <p className="mt-1 text-sm">React / Node</p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40">
+                    </motion.div>
+                    <motion.div
+                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <p className="text-xs text-zinc-400">Mobile</p>
                       <p className="mt-1 text-sm">{PROFILE.phone}</p>
-                    </div>
+                    </motion.div>
                   </div>
                   <div className="mt-5 grid gap-2">
                     <div className="flex items-center gap-2 text-sm text-zinc-200">
@@ -576,10 +672,10 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </Container>
-        </section>
+        </motion.section>
 
         <Container>
           <Section
@@ -598,295 +694,307 @@ export default function App() {
                 <p className="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-200">
                   Recently I’ve been working on structured backend services,
                   improving component reusability in React, and building ML/NLP
-                  pipelines with strong evaluation metrics.
+                  prototypes. I enjoy the challenge of turning complex problems
+                  into elegant solutions.
+                </p>
+                <p className="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-200">
+                  When I'm not coding, you'll find me exploring new technologies,
+                  contributing to open-source projects, or sharing my knowledge
+                  with the developer community.
                 </p>
               </div>
-              <div className="rounded-2xl border border-black/10 bg-black/5 p-5 dark:border-white/10 dark:bg-white/5">
-                <p className="text-sm font-medium">Now</p>
-                <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-200">
-                  <li>Building MERN projects</li>
-                  <li>Practicing ML/NLP pipelines</li>
-                  <li>Improving DSA + problem-solving</li>
-                </ul>
+              <div className="space-y-4">
+                <motion.div
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Interests</h3>
+                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+                    Machine Learning, Web Development, Open Source, UI/UX Design
+                  </p>
+                </motion.div>
+                <motion.div
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Location</h3>
+                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+                    {PROFILE.location}
+                  </p>
+                </motion.div>
               </div>
             </div>
           </Section>
 
           <Section
             id="projects"
-            title="Projects"
-            subtitle="A few strongest projects. Add links, outcomes, and what you learned."
+            title="Featured Projects"
+            subtitle="A selection of projects that showcase my skills and passion for development."
           >
-            <div className="reveal">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <p className="text-sm text-zinc-600 dark:text-zinc-300">
-                  Selected work (swipe/scroll)
-                </p>
-                <div className="hidden items-center gap-2 sm:flex">
-                  <button
-                    className="rounded-xl border border-black/10 bg-black/5 p-2 text-zinc-900 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10"
-                    onClick={() => scrollSliderBy(-1)}
-                    aria-label="Previous"
-                  >
-                    ←
-                  </button>
-                  <button
-                    className="rounded-xl border border-black/10 bg-black/5 p-2 text-zinc-900 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100 dark:hover:bg-white/10"
-                    onClick={() => scrollSliderBy(1)}
-                    aria-label="Next"
-                  >
-                    →
-                  </button>
-                </div>
-              </div>
-
-              <div
-                ref={sliderRef}
-                className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              >
-                {PROJECTS.map((p) => (
-                  <article
-                    key={p.title}
-                    className="group relative w-[86%] shrink-0 snap-start overflow-hidden border border-black/10 bg-white/70 p-6 shadow-sm transition hover:-translate-y-0.5 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/[0.07] sm:w-[420px]"
-                  >
-                    <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                      <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-indigo-500/15 blur-3xl" />
+            <div className="grid gap-6 sm:grid-cols-2">
+              {PROJECTS.filter(p => p.featured).map((project, index) => (
+                <motion.div
+                  key={project.title}
+                  className="group relative rounded-2xl border border-black/10 bg-white/70 p-6 shadow-sm transition hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-500/5 via-transparent to-fuchsia-500/5" />
+                  <div className="relative">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                        {project.title}
+                      </h3>
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {project.date}
+                      </span>
                     </div>
-                    <div className="relative flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-base font-semibold tracking-tight">
-                          {p.title}
-                        </h3>
-                        {p.date ? (
-                          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                            {p.date}
-                          </p>
-                        ) : null}
-                      </div>
-                      <div className="flex items-center gap-3 text-sm">
-                        {p.href ? (
-                          <a
-                            className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-                            href={p.href}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Live
-                          </a>
-                        ) : null}
-                        {p.repo ? (
-                          <a
-                            className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-                            href={p.repo}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Code
-                          </a>
-                        ) : null}
-                      </div>
-                    </div>
-                    <p className="relative mt-2 text-sm text-zinc-700 dark:text-zinc-200">
-                      {p.description}
+                    <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                      {project.description}
                     </p>
-                    <div className="relative mt-4 flex flex-wrap gap-2">
-                      {p.tech.map((t) => (
-                        <Badge key={t}>{t}</Badge>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tech.map((tech) => (
+                        <Badge key={tech}>{tech}</Badge>
                       ))}
                     </div>
-                  </article>
-                ))}
-              </div>
+                    <div className="mt-4 flex gap-3">
+                      {project.repo && (
+                        <PillLink
+                          href={project.repo}
+                          label="View Code"
+                          icon={
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                              <path d="M12 .5C5.73.5.75 5.48.75 11.74c0 4.86 3.16 8.97 7.55 10.42.55.1.75-.24.75-.53 0-.26-.01-1.12-.02-2.03-3.07.67-3.72-1.18-3.72-1.18-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.67 2.56 1.19 3.19.91.1-.71.38-1.19.69-1.46-2.45-.28-5.03-1.23-5.03-5.48 0-1.21.43-2.2 1.13-2.98-.11-.28-.49-1.41.11-2.95 0 0 .92-.3 3.02 1.14a10.4 10.4 0 0 1 2.75-.37c.93 0 1.87.13 2.75.37 2.1-1.44 3.02-1.14 3.02-1.14.6 1.54.22 2.67.11 2.95.7.78 1.13 1.77 1.13 2.98 0 4.26-2.59 5.19-5.05 5.47.39.34.74 1.02.74 2.06 0 1.49-.01 2.69-.01 3.06 0 .29.2.64.76.53 4.38-1.46 7.54-5.56 7.54-10.42C23.25 5.48 18.27.5 12 .5Z" />
+                            </svg>
+                          }
+                        />
+                      )}
+                      {project.href && (
+                        <PillLink
+                          href={project.href}
+                          label="Live Demo"
+                          icon={
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1l4-4v3.5l4-4v11l-4-4V13z" />
+                            </svg>
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </Section>
 
           <Section
             id="skills"
-            title="Skills"
-            subtitle="A snapshot of languages, frameworks, tools, and strengths."
+            title="Skills & Technologies"
+            subtitle="Tools and technologies I work with to bring ideas to life."
           >
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] transition hover:bg-white/[0.07]">
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                  <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
-                </div>
-                <p className="relative text-sm font-medium">Languages</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {SKILLS.languages.map((s) => (
-                    <Badge key={s}>{s}</Badge>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <motion.div
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Languages</h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {SKILLS.languages.map((skill) => (
+                    <Badge key={skill}>{skill}</Badge>
                   ))}
                 </div>
-              </div>
-              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] transition hover:bg-white/[0.07]">
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                  <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
-                </div>
-                <p className="relative text-sm font-medium">
-                  Frameworks / Technologies
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {SKILLS.frameworks.map((s) => (
-                    <Badge key={s}>{s}</Badge>
+              </motion.div>
+              <motion.div
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Frameworks</h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {SKILLS.frameworks.map((skill) => (
+                    <Badge key={skill}>{skill}</Badge>
                   ))}
                 </div>
-              </div>
-              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] transition hover:bg-white/[0.07]">
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                  <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
-                </div>
-                <p className="relative text-sm font-medium">Tools / Platforms</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {SKILLS.tools.map((s) => (
-                    <Badge key={s}>{s}</Badge>
+              </motion.div>
+              <motion.div
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Tools</h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {SKILLS.tools.map((skill) => (
+                    <Badge key={skill}>{skill}</Badge>
                   ))}
                 </div>
-              </div>
-              <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] transition hover:bg-white/[0.07]">
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                  <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
-                </div>
-                <p className="relative text-sm font-medium">Soft skills</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {SKILLS.soft.map((s) => (
-                    <Badge key={s}>{s}</Badge>
+              </motion.div>
+              <motion.div
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">Soft Skills</h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {SKILLS.soft.map((skill) => (
+                    <Badge key={skill}>{skill}</Badge>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </Section>
 
           <Section
             id="training"
-            title="Training"
-            subtitle="Hands-on programs and applied learning."
+            title="Training & Certifications"
+            subtitle="Professional development and specialized training programs."
           >
-            <div className="grid gap-4">
-              {TRAINING.map((t) => (
-                <div
-                  key={t.title}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+            <div className="space-y-6">
+              {TRAINING.map((training, index) => (
+                <motion.div
+                  key={training.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.01 }}
                 >
-                  <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute left-6 top-6 h-[calc(100%-3rem)] w-px bg-white/10" />
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                        {training.title}
+                      </h3>
+                      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
+                        {training.org} • {training.date}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-sm font-semibold">{t.title}</p>
-                    <p className="text-xs text-zinc-400">{t.date}</p>
-                  </div>
-                  <p className="mt-1 text-sm text-zinc-300">{t.org}</p>
-                  <ul className="mt-4 space-y-2 pl-10 text-sm text-zinc-200">
-                    {t.points.map((p) => (
-                      <li key={p} className="relative">
-                        <span className="absolute -left-6 top-2 h-2 w-2 rounded-full bg-indigo-400/70" />
-                        {p}
+                  <ul className="mt-4 space-y-2">
+                    {training.points.map((point, pointIndex) => (
+                      <li key={pointIndex} className="flex items-start gap-3 text-sm text-zinc-600 dark:text-zinc-300">
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500" />
+                        {point}
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
               ))}
             </div>
           </Section>
 
           <Section
             id="certifications"
-            title="Certifications"
-            subtitle="Certifications and achievements."
+            title="Credentials & Achievements"
+            subtitle="Certifications and notable achievements in my development journey."
           >
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
-                <p className="text-sm font-medium">Certifications</p>
-                <ul className="mt-4 divide-y divide-white/10 text-sm text-zinc-200">
-                  {CERTIFICATIONS.map((c) => (
-                    <li
-                      key={c.title}
-                      className="flex items-baseline justify-between gap-4 py-3"
-                    >
-                      <span>
-                        {c.title}
-                        {c.org ? (
-                          <span className="text-zinc-400"> • {c.org}</span>
-                        ) : null}
-                      </span>
-                      <span className="text-xs text-zinc-400">{c.date}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
-                <p className="text-sm font-medium">Certificates</p>
-                <ul className="mt-4 divide-y divide-white/10 text-sm text-zinc-200">
-                  {CERTIFICATES.map((c) => (
-                    <li
-                      key={`${c.title}-${c.date}`}
-                      className="flex items-baseline justify-between gap-4 py-3"
-                    >
-                      <span>
-                        {c.title}
-                        {c.org ? (
-                          <span className="text-zinc-400"> • {c.org}</span>
-                        ) : null}
-                      </span>
-                      <span className="text-xs text-zinc-400">{c.date}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {CERTIFICATES.map((cert, index) => (
+                <motion.div
+                  key={cert.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
+                    {cert.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
+                    {cert.org} • {cert.date}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </Section>
 
           <Section
             id="education"
             title="Education"
-            subtitle="Academic background."
+            subtitle="Academic background and qualifications."
           >
-            <div className="grid gap-4">
-              {EDUCATION.map((e) => (
-                <div
-                  key={`${e.school}-${e.program}-${e.date}`}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] transition hover:bg-white/[0.07]"
+            <div className="space-y-6">
+              {EDUCATION.map((edu, index) => (
+                <motion.div
+                  key={edu.school}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.01 }}
                 >
-                  <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                    <div className="absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                        {edu.program}
+                      </h3>
+                      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
+                        {edu.school} • {edu.location}
+                      </p>
+                      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                        {edu.date} • {edu.note}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-sm font-semibold">{e.school}</p>
-                    <p className="text-xs text-zinc-400">{e.date}</p>
-                  </div>
-                  <p className="mt-1 text-sm text-zinc-200">{e.program}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-300">
-                    <span>{e.location}</span>
-                    <span className="text-zinc-500">•</span>
-                    <span>{e.note}</span>
-                  </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </Section>
 
           <Section
             id="contact"
-            title="Contact"
-            subtitle="Make it easy for people to reach you."
+            title="Get In Touch"
+            subtitle="Let's connect and build something amazing together."
           >
-            <div className="reveal border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-zinc-950">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300">
-                    Email
-                  </p>
-                  <p className="mt-1 text-base">{PROFILE.email}</p>
-                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
-                    Mobile
-                  </p>
-                  <p className="mt-1 text-base">{PROFILE.phone}</p>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <motion.div
+                className="space-y-6"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <p className="text-zinc-700 dark:text-zinc-200">
+                  I'm always interested in new opportunities and collaborations.
+                  Whether you have a project in mind, want to discuss technology,
+                  or just want to connect, feel free to reach out!
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/10">
+                      <IconMail className="h-5 w-5 text-indigo-500" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-zinc-900 dark:text-zinc-100">Email</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-300">{PROFILE.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/10">
+                      <IconPhone className="h-5 w-5 text-indigo-500" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-zinc-900 dark:text-zinc-100">Phone</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-300">{PROFILE.phone}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    className="rounded-xl bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-400"
-                    href={`mailto:${PROFILE.email}`}
-                  >
-                    Send email
-                  </a>
+              </motion.div>
+              <motion.div
+                className="rounded-2xl border border-white/10 bg-white/5 p-6"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="font-medium text-zinc-900 dark:text-zinc-100 mb-4">Connect with me</h3>
+                <div className="grid gap-3">
                   <PillLink
                     href={PROFILE.links.github}
                     label="GitHub"
@@ -897,19 +1005,22 @@ export default function App() {
                     label="LinkedIn"
                     icon={<IconLinkedIn className="h-4 w-4" />}
                   />
+                  <PillLink
+                    href={PROFILE.links.instagram}
+                    label="Instagram"
+                    icon={<IconInstagram className="h-4 w-4" />}
+                  />
+                  <PillLink
+                    href={`mailto:${PROFILE.email}`}
+                    label="Send Email"
+                    icon={<IconMail className="h-4 w-4" />}
+                  />
                 </div>
-              </div>
+              </motion.div>
             </div>
           </Section>
-
-          <footer className="border-t border-white/10 py-10">
-            <p className="text-sm text-zinc-400">
-              © {new Date().getFullYear()} {PROFILE.name}. Built with React +
-              Tailwind.
-            </p>
-          </footer>
         </Container>
       </main>
-    </div>
+    </motion.div>
   )
 }
