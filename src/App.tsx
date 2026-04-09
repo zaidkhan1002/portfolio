@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode, SVGProps } from 'react'
 import { motion } from 'framer-motion'
 import {
@@ -169,10 +169,6 @@ const TRAINING = [
       'Evaluated model performance using accuracy, precision, recall, and F1‑score.',
     ],
   },
-]
-
-const CERTIFICATIONS = [
-  { title: 'Cloud Computing', org: 'NPTEL', date: "Apr '25" },
 ]
 
 const CERTIFICATES = [
@@ -384,14 +380,6 @@ export default function App() {
 
   useRevealOnScroll()
 
-  const sliderRef = useRef<HTMLDivElement | null>(null)
-  const scrollSliderBy = (dir: -1 | 1) => {
-    const el = sliderRef.current
-    if (!el) return
-    const amount = Math.max(260, Math.floor(el.clientWidth * 0.9))
-    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
-  }
-
   useEffect(() => {
     if (!menuOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -572,7 +560,7 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  Full‑stack developer building scalable products with premium UX.
+                  Full‑stack Developer building scalable products with premium UX.
                 </motion.h1>
                 <motion.p
                   className="mt-4 max-w-xl text-base leading-relaxed text-zinc-700 dark:text-zinc-200"
@@ -622,56 +610,22 @@ export default function App() {
               </motion.div>
 
               <motion.div
-                className="reveal relative rounded-3xl border border-black/10 bg-white/70 p-6 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+                className="reveal relative overflow-hidden rounded-3xl border border-black/10 shadow-sm dark:border-white/10 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 whileHover={{ y: -5 }}
               >
-                <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-transparent to-fuchsia-500/10" />
-                <div className="relative">
-                  <p className="text-sm text-zinc-300">Quick snapshot</p>
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    <motion.div
-                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <p className="text-xs text-zinc-400">Focus</p>
-                      <p className="mt-1 text-sm">MERN + ML/NLP</p>
-                    </motion.div>
-                    <motion.div
-                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <p className="text-xs text-zinc-400">Strength</p>
-                      <p className="mt-1 text-sm">APIs + UI</p>
-                    </motion.div>
-                    <motion.div
-                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <p className="text-xs text-zinc-400">Stack</p>
-                      <p className="mt-1 text-sm">React / Node</p>
-                    </motion.div>
-                    <motion.div
-                      className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4 transition hover:bg-zinc-950/40"
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <p className="text-xs text-zinc-400">Mobile</p>
-                      <p className="mt-1 text-sm">{PROFILE.phone}</p>
-                    </motion.div>
-                  </div>
-                  <div className="mt-5 grid gap-2">
-                    <div className="flex items-center gap-2 text-sm text-zinc-200">
-                      <IconMail className="h-4 w-4 text-zinc-400" />
-                      <span>{PROFILE.email}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-zinc-200">
-                      <IconPhone className="h-4 w-4 text-zinc-400" />
-                      <span>{PROFILE.phone}</span>
-                    </div>
-                  </div>
-                </div>
+                <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/20 via-transparent to-fuchsia-500/20 z-10" />
+                <motion.img
+                  src="/profile.jpg"
+                  alt="Mohd Zaid Khan"
+                  className="w-full h-full object-cover rounded-3xl"
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  whileHover={{ scale: 1.05 }}
+                />
               </motion.div>
             </div>
           </Container>
